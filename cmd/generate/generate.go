@@ -15,12 +15,6 @@
  */
 package main
 
-/**
-glide install --strip-vendor --strip-vcs
-go build ./cmd/generate
-generate.exe > C:\Go\src\github.com\fabric8io\kubernetes-model\kubernetes-model\src\main\resources\schema\kube-schema.json
- */
-
 import (
 	"bytes"
 	"encoding/json"
@@ -40,13 +34,14 @@ import (
 	//templateapi "github.com/openshift/origin/pkg/template/api/v1"
 	//userapi "github.com/openshift/origin/pkg/user/api/v1"
 	resourceapi "k8s.io/apimachinery/pkg/api/resource"
-	//rapi "k8s.io/kubernetes/pkg/api/unversioned"
+	rapi "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kapi "k8s.io/kubernetes/pkg/api/v1"
 	appsapi "k8s.io/kubernetes/pkg/apis/apps/v1beta1"
 	batchapi "k8s.io/kubernetes/pkg/apis/batch/v1"
 	storageapi "k8s.io/kubernetes/pkg/apis/storage/v1"
 	extensions "k8s.io/kubernetes/pkg/apis/extensions/v1beta1"
-	//configapi "k8s.io/kubernetes/pkg/client/unversioned/clientcmd/api/v1"
+	configapi "k8s.io/client-go/tools/clientcmd/api/v1"
+	autoscalingapi "k8s.io/client-go/pkg/apis/autoscaling/v1"
 	watch "k8s.io/kubernetes/pkg/watch/json"
 
 	"github.com/fabric8io/kubernetes-model/pkg/schemagen"
@@ -79,8 +74,8 @@ type Schema struct {
 	//SecurityContextConstraintsList kapi.SecurityContextConstraintsList
 	ServiceAccount                 kapi.ServiceAccount
 	ServiceAccountList             kapi.ServiceAccountList
-	//Status                         rapi.Status
-	//Patch                          rapi.Patch
+	Status                         rapi.Status
+	Patch                          rapi.Patch
 	Binding                        kapi.Binding
 	LimitRangeList                 kapi.LimitRangeList
 	DeleteOptions                  kapi.DeleteOptions
@@ -131,20 +126,21 @@ type Schema struct {
 	//Identity                       userapi.Identity
 	//IdentityList                   userapi.IdentityList
 	WatchEvent                     watch.WatchEvent
-	//RootPaths                      rapi.RootPaths
+	Config                         configapi.Config
+	RootPaths                      rapi.RootPaths
 	//Project                        projectapi.Project
 	//ProjectList                    projectapi.ProjectList
 	//ProjectRequest                 projectapi.ProjectRequest
 	Job                            batchapi.Job
 	JobList                        batchapi.JobList
-	//ListMeta                       rapi.ListMeta
+	ListMeta                       rapi.ListMeta
 	//CronJob                        batchapi.CronJob
 	//CronJobList                    batchapi.CronJobList
 	StorageClass		       storageapi.StorageClass
 	StorageClassList	       storageapi.StorageClassList
 	Scale                          extensions.Scale
-	//HorizontalPodAutoscaler        extensions.HorizontalPodAutoscaler
-	//HorizontalPodAutoscalerList    extensions.HorizontalPodAutoscalerList
+	HorizontalPodAutoscaler        autoscalingapi.HorizontalPodAutoscaler
+	HorizontalPodAutoscalerList    autoscalingapi.HorizontalPodAutoscalerList
 	ThirdPartyResource             extensions.ThirdPartyResource
 	ThirdPartyResourceList         extensions.ThirdPartyResourceList
 	Deployment                     extensions.Deployment
@@ -189,8 +185,10 @@ func main() {
 		//{"github.com/openshift/origin/pkg/user/api/v1", "io.fabric8.openshift.api.model", "os_user_"},
 		//{"github.com/openshift/origin/pkg/authorization/api/v1", "io.fabric8.openshift.api.model", "os_authorization_"},
 		//{"github.com/openshift/origin/pkg/project/api/v1", "io.fabric8.openshift.api.model", "os_project_"},
-		{"k8s.io/kubernetes/pkg/api/unversioned", "io.fabric8.kubernetes.api.model", "api_"},
+		//{"k8s.io/kubernetes/pkg/api/unversioned", "io.fabric8.kubernetes.api.model", "api_"},
+		{"k8s.io/client-go/tools/clientcmd/api/v1", "io.fabric8.kubernetes.api.model", "clientcmd_api_"},
 		{"k8s.io/kubernetes/pkg/apis/extensions/v1beta1", "io.fabric8.kubernetes.api.model.extensions", "kubernetes_extensions_"},
+		{"k8s.io/client-go/pkg/apis/autoscaling/v1", "io.fabric8.kubernetes.api.model.extensions", "kubernetes_autoscaling_"},
 		{"k8s.io/kubernetes/pkg/apis/apps/v1beta1", "io.fabric8.kubernetes.api.model.extensions", "kubernetes_apps_"},
 		{"k8s.io/kubernetes/pkg/apis/batch/v1", "io.fabric8.kubernetes.api.model", "kubernetes_batch_"},
 	}
