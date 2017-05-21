@@ -1,6 +1,7 @@
-/generate
+/generate*
 /kube-schema.json
 target/
+vendor/
 .idea/
 *.iml
 .settings
