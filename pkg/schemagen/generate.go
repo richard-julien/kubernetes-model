@@ -353,7 +353,9 @@ func (g *schemaGenerator) getStructProperties(t reflect.Type) map[string]JSONPro
 				case "apiVersion":
 					apiVersion := filepath.Base(pkgPath(t))
 					apiGroup := filepath.Base(strings.TrimSuffix(pkgPath(t), apiVersion))
-					if apiGroup != "api" {
+					if (apiGroup == "storage") { //Specific check for storageClass
+						apiVersion = "storage.k8s.io" + "/" + apiVersion
+					} else if apiGroup != "api" {
 						apiVersion = apiGroup + "/" + apiVersion
 					}
 					v = JSONPropertyDescriptor{
